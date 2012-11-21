@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<XnaContent>
+  <Asset Type="Data.Settings">
+
+    <ScreenWidth>1</ScreenWidth>
+    <ScreenHeight>1</ScreenHeight> 
+    
+    <StartPositionX>120</StartPositionX>
+    <StartPositionY>83</StartPositionY>
+
+    <SpriteHeight>16</SpriteHeight>
+    <SpriteWidth>16</SpriteWidth>
+
+    <MaxSpeed>5</MaxSpeed>
+    <Acceleration>0.3</Acceleration>
+    
+    <AnimationSpeed>6</AnimationSpeed>
+
+  </Asset>
+</XnaContent>
