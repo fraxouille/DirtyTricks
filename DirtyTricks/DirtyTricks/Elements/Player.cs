@@ -98,12 +98,18 @@ namespace DirtyTricks
             position.Y += speed.Y;
             position.Y = Collision.MoveSpriteOnMap(Axis.YAxis, previousPosition, position, playerSize, playerHitbox).Y;
             if (previousPosition.Y == position.Y)
+            {
                 speed.Y = 0;
+                acceleration.Y = 0;
+            }
 
             position.X += speed.X;
             position.X = Collision.MoveSpriteOnMap(Axis.XAxis, previousPosition, position, playerSize, playerHitbox).X;
             if (previousPosition.X == position.X)
+            {
+                acceleration.X = 0;
                 speed.X = 0;
+            }
             
             AnimateFrame();
             animateOnce = true;
@@ -111,33 +117,33 @@ namespace DirtyTricks
 
 
         //Update & Draw
-        public void Update(MouseState mouse, KeyboardState keyboard)
+        public void Update(MouseState mouse, KeyboardState keyboard, GamePadState gamePadState)
         {
-            if (keyboard.IsKeyDown(Keys.Up) && keyboard.IsKeyUp(Keys.Down))
+            if ((keyboard.IsKeyDown(Keys.Up) && keyboard.IsKeyUp(Keys.Down)) || gamePadState.IsButtonDown(Buttons.DPadUp))
             {
                 direction = Direction.Up;
                 acceleration.Y = -maxAcceleration;
             }
 
-            if (keyboard.IsKeyDown(Keys.Down) && keyboard.IsKeyUp(Keys.Up))
+            if ((keyboard.IsKeyDown(Keys.Down) && keyboard.IsKeyUp(Keys.Up)) || gamePadState.IsButtonDown(Buttons.DPadDown))
             {
                 direction = Direction.Down;
                 acceleration.Y = maxAcceleration;
             }
 
-            if (keyboard.IsKeyDown(Keys.Left) && keyboard.IsKeyUp(Keys.Right))
+            if ((keyboard.IsKeyDown(Keys.Left) && keyboard.IsKeyUp(Keys.Right)) || gamePadState.IsButtonDown(Buttons.DPadLeft))
             {
                 direction = Direction.Left;
                 acceleration.X = -maxAcceleration;
             }
 
-            if (keyboard.IsKeyDown(Keys.Right) && keyboard.IsKeyUp(Keys.Left))
+            if ((keyboard.IsKeyDown(Keys.Right) && keyboard.IsKeyUp(Keys.Left)) || gamePadState.IsButtonDown(Buttons.DPadRight))
             {
                 direction = Direction.Right;
                 acceleration.X = maxAcceleration;
             }
 
-            if (keyboard.IsKeyUp(Keys.Up) && keyboard.IsKeyUp(Keys.Down))
+            if (keyboard.IsKeyUp(Keys.Up) && keyboard.IsKeyUp(Keys.Down) && gamePadState.IsButtonUp(Buttons.DPadUp) && gamePadState.IsButtonUp(Buttons.DPadDown))
             {
                 if (speed.Y < -maxAcceleration)
                     acceleration.Y = maxAcceleration;
@@ -150,7 +156,7 @@ namespace DirtyTricks
                 }
             }
 
-            if (keyboard.IsKeyUp(Keys.Left) && keyboard.IsKeyUp(Keys.Right))
+            if (keyboard.IsKeyUp(Keys.Left) && keyboard.IsKeyUp(Keys.Right) && gamePadState.IsButtonUp(Buttons.DPadLeft) && gamePadState.IsButtonUp(Buttons.DPadRight))
             {
                 if (speed.X < -maxAcceleration)
                     acceleration.X = maxAcceleration;
@@ -171,7 +177,8 @@ namespace DirtyTricks
                 animateOnce = false;
             }
 
-            if (keyboard.IsKeyUp(Keys.Up) && keyboard.IsKeyUp(Keys.Down) && keyboard.IsKeyUp(Keys.Left) && keyboard.IsKeyUp(Keys.Right))
+            if (keyboard.IsKeyUp(Keys.Up) && keyboard.IsKeyUp(Keys.Down) && keyboard.IsKeyUp(Keys.Left) && keyboard.IsKeyUp(Keys.Right)
+                && gamePadState.IsButtonUp(Buttons.DPadUp) && gamePadState.IsButtonUp(Buttons.DPadDown) && gamePadState.IsButtonUp(Buttons.DPadLeft) && gamePadState.IsButtonUp(Buttons.DPadRight))
             {
                 animationTimer = 0;
                 frameLine = 0;

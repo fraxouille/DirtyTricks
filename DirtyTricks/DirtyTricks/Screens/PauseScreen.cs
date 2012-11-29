@@ -12,7 +12,7 @@ namespace DirtyTricks
     class PauseScreen : Microsoft.Xna.Framework.Game
     {
         // Properties
-        bool exitPauseAllowed;
+        bool exitPauseAllowed = false;
         public bool exitGame = false;
         int _selection = 0,
             _btnNumber = 2,
@@ -91,10 +91,10 @@ namespace DirtyTricks
         // Update & Draw
         public void Update(MouseState mouse, KeyboardState keyboard, GamePadState gamePadState)
         {
-            if (keyboard.IsKeyUp(Keys.Escape))
+            if (keyboard.IsKeyUp(Keys.Escape) && gamePadState.Buttons.Start == ButtonState.Released)
                 exitPauseAllowed = true;
-
-            if (keyboard.IsKeyDown(Keys.Escape) && exitPauseAllowed)
+            
+            if ((keyboard.IsKeyDown(Keys.Escape) || gamePadState.Buttons.Start == ButtonState.Pressed) && exitPauseAllowed)
             {
                 _selection = 0;
                 exitPauseAllowed = false;
@@ -104,17 +104,17 @@ namespace DirtyTricks
             for (int i = 0; i < _btnNumber; i++)
                 _buttons[i].Update(mouse, keyboard);
 
-            if (keyboard.IsKeyDown(Keys.Down))
+            if (keyboard.IsKeyDown(Keys.Down) || gamePadState.IsButtonDown(Buttons.DPadDown))
                 DownButton();
-            if (keyboard.IsKeyUp(Keys.Down))
+            if (keyboard.IsKeyUp(Keys.Down) && gamePadState.IsButtonUp(Buttons.DPadDown))
                 _currentDownState = false;
 
-            if (keyboard.IsKeyDown(Keys.Up))
+            if (keyboard.IsKeyDown(Keys.Up) || gamePadState.IsButtonDown(Buttons.DPadUp))
                 UpButton();
-            if (keyboard.IsKeyUp(Keys.Up))
+            if (keyboard.IsKeyUp(Keys.Up) && gamePadState.IsButtonUp(Buttons.DPadUp))
                 _currentUpState = false;
 
-            if (keyboard.IsKeyDown(Keys.Enter))
+            if ((keyboard.IsKeyDown(Keys.Enter) || gamePadState.Buttons.Start == ButtonState.Pressed || gamePadState.Buttons.A == ButtonState.Pressed) && exitPauseAllowed)
             {
                 switch (_selection)
                 {

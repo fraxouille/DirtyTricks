@@ -28,6 +28,10 @@ namespace DirtyTricks
         GameScreen gameScreen;
         PauseScreen pauseScreen;
 
+        MouseState mouseState;
+        KeyboardState keyboardState;
+        GamePadState gamePadState;
+
         public static GameState gameState;
 
 
@@ -37,22 +41,22 @@ namespace DirtyTricks
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
-            Settings.Current = Content.Load<Settings>("Settings");
-            gameState = GameState.Menu;
+            graphics.IsFullScreen = int.Parse(ConfigurationManager.AppSettings["fullScreen"]) != 0;
             int screenWidth = int.Parse(ConfigurationManager.AppSettings["screenWidth"]);
             int screenHeight = int.Parse(ConfigurationManager.AppSettings["screenHeight"]);
             graphics.PreferredBackBufferWidth = screenWidth; // 1080p=1920 - 720p=1280
             graphics.PreferredBackBufferHeight = screenHeight; // 1080p=1080 - 720p=720
+
+            Settings.Current = Content.Load<Settings>("Settings");
             Settings.Current.UpdateSreenSize(screenWidth, screenHeight);
-            graphics.IsFullScreen = int.Parse(ConfigurationManager.AppSettings["fullScreen"]) != 0;
+
             this.IsMouseVisible = true;
+            gameState = GameState.Menu;
         }
 
         //Methods
         protected override void Initialize()
         {
-            //settings.screenWidth = GraphicsDevice.Viewport.Width;
-            //settings.screenHeight = GraphicsDevice.Viewport.Height;
             base.Initialize();
         }
 
@@ -79,29 +83,27 @@ namespace DirtyTricks
                 Exit();
             }
 
-            GamePadState gamePadState = GamePad.GetState(PlayerIndex.One);
-            if (gamePadState.IsConnected)
-                Console.WriteLine("OK");
-
+            mouseState = Mouse.GetState();
+            keyboardState = Keyboard.GetState();
+            gamePadState = GamePad.GetState(PlayerIndex.One);
             if (gamePadState.Buttons.Back == ButtonState.Pressed)
                 this.Exit();
-
             
             switch (gameState)
             {
                 case GameState.Menu:
                     {
-                        menuScreen.Update(Mouse.GetState(), Keyboard.GetState(), gamePadState);
+                        menuScreen.Update(mouseState, keyboardState, gamePadState);
                         break;
                     }
                 case GameState.Game :
                     {
-                        gameScreen.Update(Mouse.GetState(), Keyboard.GetState(), gamePadState);
+                        gameScreen.Update(mouseState, keyboardState, gamePadState);
                         break;
                     }
                 case GameState.Pause:
                     {
-                        pauseScreen.Update(Mouse.GetState(), Keyboard.GetState(), gamePadState);
+                        pauseScreen.Update(mouseState, keyboardState, gamePadState);
                         break;
                     }
             }

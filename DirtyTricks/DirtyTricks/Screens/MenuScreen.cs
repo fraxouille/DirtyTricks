@@ -91,38 +91,22 @@ namespace DirtyTricks
         }
 
         // Update & Draw
-        public void Update(MouseState mouse, KeyboardState keyboard, GamePadState gamepad)
+        public void Update(MouseState mouse, KeyboardState keyboard, GamePadState gamePadState)
         {
-            //gamepadState = GamePad.GetState(PlayerIndex.One);
-
             for (int i = 0; i < _btnNumber; i++)
                 _buttons[i].Update(mouse, keyboard);
 
-            if (gamepad.IsConnected)
-            {
-                Console.WriteLine("Gamepad connected");
-                if (gamepad.IsButtonDown(Buttons.DPadDown))
-                    DownButton();
-                if (gamepad.IsButtonUp(Buttons.DPadDown))
-                    _currentDownState = false;
-
-                if (gamepad.IsButtonDown(Buttons.DPadUp))
-                    UpButton();
-                if (gamepad.IsButtonUp(Buttons.DPadUp))
-                    _currentUpState = false;
-            }
-
-            if (keyboard.IsKeyDown(Keys.Down))
+            if (keyboard.IsKeyDown(Keys.Down) || gamePadState.IsButtonDown(Buttons.DPadDown))
                 DownButton();
-            if (keyboard.IsKeyUp(Keys.Down))
+            if (keyboard.IsKeyUp(Keys.Down) && gamePadState.IsButtonUp(Buttons.DPadDown))
                 _currentDownState = false;
 
-            if (keyboard.IsKeyDown(Keys.Up))
+            if (keyboard.IsKeyDown(Keys.Up) || gamePadState.IsButtonDown(Buttons.DPadUp))
                 UpButton();
-            if (keyboard.IsKeyUp(Keys.Up))
+            if (keyboard.IsKeyUp(Keys.Up) && gamePadState.IsButtonUp(Buttons.DPadUp))
                 _currentUpState = false;
 
-            if (keyboard.IsKeyDown(Keys.Enter))
+            if (keyboard.IsKeyDown(Keys.Enter) || gamePadState.Buttons.Start == ButtonState.Pressed || gamePadState.Buttons.A == ButtonState.Pressed)
             {
                 switch (_selection)
                 {

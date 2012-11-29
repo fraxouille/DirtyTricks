@@ -32,13 +32,14 @@ namespace DirtyTricks
         //Update & Draw
         public void Update(MouseState mouse, KeyboardState keyboard, GamePadState gamePadState)
         {
-            if (Keyboard.GetState().IsKeyUp(Keys.Escape))
+            if (keyboard.IsKeyUp(Keys.Escape) && gamePadState.Buttons.Start == ButtonState.Released)
                 pauseAllowed = true;
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Escape) && pauseAllowed)
+            if ((keyboard.IsKeyDown(Keys.Escape) || gamePadState.Buttons.Start == ButtonState.Pressed) && pauseAllowed)
             {
-                Game1.gameState = GameState.Pause;
+
                 pauseAllowed = false;
+                Game1.gameState = GameState.Pause;
             }
 
             if (mouse.X > 800)
@@ -55,7 +56,7 @@ namespace DirtyTricks
                 
 
             Map.Current.Update();
-            player.Update(mouse, keyboard);
+            player.Update(mouse, keyboard, gamePadState);
         }
 
         public void Draw(SpriteBatch spriteBatch)
